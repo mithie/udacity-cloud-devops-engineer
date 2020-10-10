@@ -1,0 +1,9 @@
+Description: >
+    Michael Thiem / Udacity Student
+    CFN Template for deploying a VPC
+Resources:
+    SampleVPC:
+        Type: AWS::EC2::VPC
+        Properties:
+            CidrBlock: 10.0.0.1/16
+            EnableDnsHostnames: true
