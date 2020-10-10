@@ -5,5 +5,5 @@ Resources:
     SampleVPC:
         Type: AWS::EC2::VPC
         Properties:
-            CidrBlock: 10.0.0.1/16
+            CidrBlock: 10.0.0.0/20
             EnableDnsHostnames: true
