@@ -1,9 +1,167 @@
 Description: >
     Michael Thiem / Udacity Student
-    CFN Template for deploying a VPC
+    CFN Template for deploying a high-availability web application infrastructure.
+
+Parameters:
+    Name:
+        Description: Name of the Environment that will be used as prefix for resources.
+        Type: String
+    VpcCIDR:
+        Description: Please enter the CIDR range for the VPC to be created.
+        Type: String
+        Default: 10.0.0.0/20
+    PublicSubnet1CIDR:
+        Description: Please enter the CIDR range for the VPCs public subnet 1.
+        Type: String
+        Default: 10.0.1.0/24
+    PublicSubnet2CIDR:
+        Description: Please enter the CIDR range for the VPCs public subnet 2.
+        Type: String
+        Default: 10.0.2.0/24
+    PrivateSubnet1CIDR:
+        Description: Please enter the CIDR range for the VPCs private subnet 1.
+        Type: String
+        Default: 10.0.3.0/24
+    PrivateSubnet2CIDR:
+        Description: Please enter the CIDR range for the VPCs private subnet 2.
+        Type: String
+        Default: 10.0.4.0/24
+
 Resources:
-    SampleVPC:
+    #-----------------------------
+    # VPC and Subnet Configuration
+    #-----------------------------
+    VPC:
         Type: AWS::EC2::VPC
         Properties:
-            CidrBlock: 10.0.0.0/20
+            CidrBlock: !Ref VpcCIDR
             EnableDnsHostnames: true
+            Tags:
+                - Key: Name
+                  Value: !Ref Name
+    PublicSubnet1: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet1CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${Name} Public Subnet 1 (AZ1)
+    PublicSubnet2: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PublicSubnet2CIDR
+            MapPublicIpOnLaunch: true
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${Name} Public Subnet 2 (AZ2)
+    PrivateSubnet1: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 0, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet1CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${Name} Private Subnet 1 (AZ1)
+    PrivateSubnet2: 
+        Type: AWS::EC2::Subnet
+        Properties:
+            VpcId: !Ref VPC
+            AvailabilityZone: !Select [ 1, !GetAZs '' ]
+            CidrBlock: !Ref PrivateSubnet2CIDR
+            MapPublicIpOnLaunch: false
+            Tags: 
+                - Key: Name 
+                  Value: !Sub ${Name} Private Subnet 2 (AZ2)
+
+    #-------------------------------
+    # Internet Gateway Configuration
+    #-------------------------------             
+    InternetGateway:
+        Type: AWS::EC2::InternetGateway
+        Properties:
+            Tags:
+                - Key: Name
+                  Value: !Ref Name   
+    InternetGatewayAttachment:
+        Type: AWS::EC2::VPCGatewayAttachment
+        Properties:
+            InternetGatewayId: !Ref InternetGateway
+            VpcId: !Ref VPC
+
+    #--------------------------
+    # NAT Gateway Configuration
+    #--------------------------    
+    NatGateway1EIP:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties: 
+            Domain: vpc
+
+    NatGateway2EIP:
+        Type: AWS::EC2::EIP
+        DependsOn: InternetGatewayAttachment
+        Properties:
+            Domain: vpc
+
+    NatGateway1: 
+        Type: AWS::EC2::NatGateway
+        Properties: 
+            AllocationId: !GetAtt NatGateway1EIP.AllocationId
+            SubnetId: !Ref PublicSubnet1
+
+    NatGateway2: 
+        Type: AWS::EC2::NatGateway
+        Properties:
+            AllocationId: !GetAtt NatGateway2EIP.AllocationId
+            SubnetId: !Ref PublicSubnet2
+
+Outputs: 
+
+    VPC: 
+        Description: A reference to the created VPC
+        Value: !Ref VPC
+        Export:
+            Name: !Sub ${Name}-VPCID
+
+    PublicSubnets:
+        Description: A list of the public subnets
+        Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
+        Export:
+            Name: !Sub ${Name}-PUB-NETS
+
+    PrivateSubnets:
+        Description: A list of the private subnets
+        Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
+        Export:
+            Name: !Sub ${Name}-PRIV-NETS
+
+    PublicSubnet1:
+        Description: A reference to the public subnet in the 1st Availability Zone
+        Value: !Ref PublicSubnet1
+        Export:
+            Name: !Sub ${Name}-PUB1-SN
+
+    PublicSubnet2: 
+        Description: A reference to the public subnet in the 2nd Availability Zone
+        Value: !Ref PublicSubnet2
+        Export:
+            Name: !Sub ${Name}-PUB2-SN
+
+    PrivateSubnet1:
+        Description: A reference to the private subnet in the 1st Availability Zone
+        Value: !Ref PrivateSubnet1
+        Export:
+            Name: !Sub ${Name}-PRI1-SN
+
+    PrivateSubnet2: 
+        Description: A reference to the private subnet in the 2nd Availability Zone
+        Value: !Ref PrivateSubnet2
+        Export:
+            Name: !Sub ${Name}-PRI2-SN
