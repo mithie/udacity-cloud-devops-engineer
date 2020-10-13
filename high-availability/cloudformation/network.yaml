@@ -4,7 +4,7 @@ Description: >
 
 Parameters:
     Name:
-        Description: Name of the Environment that will be used as prefix for resources.
+        Description: Name of the Project that will be used as prefix for resources.
         Type: String
     VpcCIDR:
         Description: Please enter the CIDR range for the VPC to be created.
