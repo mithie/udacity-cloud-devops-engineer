@@ -51,33 +51,34 @@ delete-stack.sh | deletes this project
 ### Create Stack
 Network and service stacks need to be created in subsequent order.
 
-**Note:** CFN_STACK_NAME in the commands mentioned below can be replaced with an arbitrary name for the Cloud Formation Stack.
+**Note:** `CFN_NETWORK_STACK_NAME` and `CFN_SERVICE_STACK_NAME` in the commands mentioned below can be replaced with an arbitrary name for the Cloud Formation Stack.
 
 #### Create Network Stack
 ```bash
-./create-stack.sh <CFN_STACK_NAME> cloudformation/network.yaml cloudformation/network-parameters.json
+./create-stack.sh <CFN_NETWORK_STACK_NAME> cloudformation/network.yaml cloudformation/network-parameters.json
 ```
 #### Create Service Stack
 ```bash
-./create-stack.sh <CFN_STACK_NAME> cloudformation/service.yaml cloudformation/service-parameters.json
+./create-stack.sh <CFN_SERVICE_STACK_NAME> cloudformation/service.yaml cloudformation/service-parameters.json
 ```
 
 ### Update Stack
 
 #### Update Network Stack
 ```bash
-./update-stack.sh <CFN_STACK_NAME> cloudformation/network.yaml cloudformation/network-parameters.json
+./update-stack.sh <CFN_NETWORK_STACK_NAME> cloudformation/network.yaml cloudformation/network-parameters.json
 ```
 
 #### Update Service Stack
 ```bash
-./update-stack.sh <CFN_STACK_NAME> cloudformation/service.yaml cloudformation/service-parameters.json
+./update-stack.sh <CFN_SERVICE_STACK_NAME> cloudformation/service.yaml cloudformation/service-parameters.json
 ```
 
-### Delete Stack
+### Delete Stacks
 
 ```bash
-./delete-stack.sh <CFN_STACK_NAME>
+./delete-stack.sh <CFN_SERVICE_STACK_NAME>
+./delete-stack.sh <CFN_NETWORK_STACK_NAME>
 ```
 
 ## Test the deployment
