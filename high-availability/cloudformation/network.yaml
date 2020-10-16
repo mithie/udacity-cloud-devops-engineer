@@ -3,7 +3,7 @@ Description: >
     CFN Template for deploying a high-availability web application infrastructure.
 
 Parameters:
-    Name:
+    ProjectName:
         Description: Name of the Project that will be used as prefix for resources.
         Type: String
     VpcCIDR:
@@ -38,7 +38,7 @@ Resources:
             EnableDnsHostnames: true
             Tags:
                 - Key: Name
-                  Value: !Ref Name
+                  Value: !Ref ProjectName
     PublicSubnet1: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -48,7 +48,7 @@ Resources:
             MapPublicIpOnLaunch: true
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Public Subnet 1 (AZ1)
+                  Value: !Sub ${ProjectName} Public Subnet 1 (AZ1)
     PublicSubnet2: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -58,7 +58,7 @@ Resources:
             MapPublicIpOnLaunch: true
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Public Subnet 2 (AZ2)
+                  Value: !Sub ${ProjectName} Public Subnet 2 (AZ2)
     PrivateSubnet1: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -68,7 +68,7 @@ Resources:
             MapPublicIpOnLaunch: false
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Private Subnet 1 (AZ1)
+                  Value: !Sub ${ProjectName} Private Subnet 1 (AZ1)
     PrivateSubnet2: 
         Type: AWS::EC2::Subnet
         Properties:
@@ -78,7 +78,7 @@ Resources:
             MapPublicIpOnLaunch: false
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Private Subnet 2 (AZ2)
+                  Value: !Sub ${ProjectName} Private Subnet 2 (AZ2)
 
     #-------------------------------
     # Internet Gateway Configuration
@@ -88,7 +88,7 @@ Resources:
         Properties:
             Tags:
                 - Key: Name
-                  Value: !Ref Name   
+                  Value: !Ref ProjectName   
     InternetGatewayAttachment:
         Type: AWS::EC2::VPCGatewayAttachment
         Properties:
@@ -138,7 +138,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Public Route Definitions
+                  Value: !Sub ${ProjectName} Public Route Definitions
 
     DefaultPublicRoute: 
         Type: AWS::EC2::Route
@@ -177,7 +177,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Private Route Definitions (AZ1)
+                  Value: !Sub ${ProjectName} Private Route Definitions (AZ1)
 
     DefaultPrivateRoute1:
         Type: AWS::EC2::Route
@@ -198,7 +198,7 @@ Resources:
             VpcId: !Ref VPC
             Tags: 
                 - Key: Name 
-                  Value: !Sub ${Name} Private Route Definitions (AZ2)
+                  Value: !Sub ${ProjectName} Private Route Definitions (AZ2)
 
     DefaultPrivateRoute2:
         Type: AWS::EC2::Route
@@ -219,58 +219,58 @@ Outputs:
         Description: A reference to the created VPC
         Value: !Ref VPC
         Export:
-            Name: !Sub ${Name}-VPCID
+            Name: !Sub ${ProjectName}-VPCID
 
     PublicSubnets:
         Description: A list of the public subnets
         Value: !Join [ ",", [ !Ref PublicSubnet1, !Ref PublicSubnet2 ]]
         Export:
-            Name: !Sub ${Name}-PUB-NETS
+            Name: !Sub ${ProjectName}-PUB-NETS
 
     PrivateSubnets:
         Description: A list of the private subnets
         Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2 ]]
         Export:
-            Name: !Sub ${Name}-PRIV-NETS
+            Name: !Sub ${ProjectName}-PRIV-NETS
 
     PublicSubnet1:
         Description: A reference to the public subnet in the 1st Availability Zone
         Value: !Ref PublicSubnet1
         Export:
-            Name: !Sub ${Name}-PUB1-SN
+            Name: !Sub ${ProjectName}-PUB1-SN
 
     PublicSubnet2: 
         Description: A reference to the public subnet in the 2nd Availability Zone
         Value: !Ref PublicSubnet2
         Export:
-            Name: !Sub ${Name}-PUB2-SN
+            Name: !Sub ${ProjectName}-PUB2-SN
 
     PrivateSubnet1:
         Description: A reference to the private subnet in the 1st Availability Zone
         Value: !Ref PrivateSubnet1
         Export:
-            Name: !Sub ${Name}-PRI1-SN
+            Name: !Sub ${ProjectName}-PRI1-SN
 
     PrivateSubnet2: 
         Description: A reference to the private subnet in the 2nd Availability Zone
         Value: !Ref PrivateSubnet2
         Export:
-            Name: !Sub ${Name}-PRI2-SN
+            Name: !Sub ${ProjectName}-PRI2-SN
 
     VPCPublicRouteTable:
         Description: Public Routing
         Value: !Ref PublicRouteTable
         Export:
-            Name: !Sub ${Name}-PUB-RT
+            Name: !Sub ${ProjectName}-PUB-RT
 
     VPCPrivateRouteTable1:
         Description: Private Routing AZ1
         Value: !Ref PrivateRouteTable1
         Export:
-            Name: !Sub ${Name}-PRIV1-RT
+            Name: !Sub ${ProjectName}-PRIV1-RT
 
     VPCPrivateRouteTable2:
         Description: Private Routing AZ2
         Value: !Ref PrivateRouteTable2
         Export:
-            Name: !Sub ${Name}-PRIV2-RT
+            Name: !Sub ${ProjectName}-PRIV2-RT
