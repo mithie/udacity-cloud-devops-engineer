@@ -9,7 +9,8 @@ jobs:
 
     steps:
 
-      - checkout
+      - checkout:
+          path: ~/temp/circleci-demo
 
       - restore_cache:
           key: circleci-demo-{{ checksum "pom.xml" }}
