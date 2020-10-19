@@ -9,6 +9,11 @@ jobs:
 
     steps:
 
+      - run: 
+          name: "echo MY_ENV_VAR"
+          command: |
+            echo $MY_ENV_VAR # this env var must be set within the project
+
       - checkout:
           path: ~/udacity-cloud-devops-engineer
       - run: ls -la; pwd;
