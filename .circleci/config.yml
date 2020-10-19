@@ -11,7 +11,7 @@ jobs:
 
       - checkout:
           path: ~/udacity-cloud-devops-engineer
-      - run: cd temp/circleci-demo/; ls -la; pwd;
+      - run: ls -la; pwd;
 
       - restore_cache:
           key: circleci-demo-{{ checksum "pom.xml" }}
