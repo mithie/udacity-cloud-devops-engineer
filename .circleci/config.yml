@@ -9,14 +9,14 @@ jobs:
 
     steps:
 
-      - run: 
-          name: "echo MY_ENV_VAR"
-          command: |
-            echo $MY_ENV_VAR # this env var must be set within the project
-
       - checkout:
           path: ~/udacity-cloud-devops-engineer
       - run: ls -la; pwd;
+
+      #- run: 
+      #    name: "echo MY_ENV_VAR"
+      #    command: |
+      #    echo $MY_ENV_VAR # this env var must be set within the project
 
       - restore_cache:
           key: circleci-demo-{{ checksum "pom.xml" }}
