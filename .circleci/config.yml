@@ -5,7 +5,7 @@ jobs:
     working_directory: ~/udacity-cloud-devops-engineer/temp/circleci-demo
 
     docker:
-      - image: circleci/openjdk:8-jdk-stretch
+      - image: circleci/openjdk:16-jdk-buster
 
     steps:
 
