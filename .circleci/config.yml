@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     
-    working_directory: ~/temp/circleci-demo
+    working_directory: ./temp/circleci-demo
 
     docker:
       - image: circleci/openjdk:8-jdk-stretch
@@ -10,7 +10,7 @@ jobs:
     steps:
 
       - checkout:
-          path: ~/temp/circleci-demo
+          path: ./temp/circleci-demo
 
       - restore_cache:
           key: circleci-demo-{{ checksum "pom.xml" }}
